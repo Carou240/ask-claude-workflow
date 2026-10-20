@@ -1,0 +1,4 @@
+{
+  "question": "Test de connexion : dis simplement bonjour et confirme que tu es Claude.",
+  "model": "claude-sonnet-4-5"
+}

@@ -1,0 +1,35 @@
+name: Ask Claude
+
+on:
+  push:
+    branches: [main]
+    paths: ['question.json']
+
+permissions:
+  contents: write
+
+jobs:
+  ask-claude:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install httpx
+        run: pip install httpx
+
+      - name: Ask Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python .github/scripts/ask_claude.py
+
+      - name: Commit answer
+        run: |
+          git config user.name "claude-bot"
+          git config user.email "actions@github.com"
+          git add answer.md
+          git commit -m "Answer from Claude [skip ci]" || echo "nothing to commit"
+          git push
